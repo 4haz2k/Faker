@@ -226,7 +226,7 @@ class Person extends \Faker\Provider\Person
      */
     public function passportSeries()
     {
-        $yearOfIssue = substr(rand(1997, (int)date("Y")), -2);
+        $yearOfIssue = substr(mt_rand(1997, (int)date("Y")), -2);
 
         return static::randomElement(static::$okato) . $yearOfIssue;
     }
@@ -240,7 +240,7 @@ class Person extends \Faker\Provider\Person
      */
     public function passportNumber()
     {
-        return str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        return str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -250,6 +250,6 @@ class Person extends \Faker\Provider\Person
      */
     private static function getRandomPart()
     {
-        return str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
+        return str_pad(mt_rand(0, 999), 3, '0', STR_PAD_LEFT);
     }
 }
