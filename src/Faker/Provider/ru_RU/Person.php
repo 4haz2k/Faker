@@ -108,6 +108,18 @@ class Person extends \Faker\Provider\Person
     protected static $lastNameSuffix = ['а', ''];
 
     /**
+     * {@link} https://classifikators.ru/okato
+     */
+    private static $okato = [
+        '01', '03', '04', '05', '07', '08', '10', '11', '12', '14', '15', '17', '18', '19', '20',
+        '22', '24', '25', '26', '27', '28', '29', '30', '32', '33', '34', '36', '37', '38', '40',
+        '41', '42', '44', '45', '46', '47', '49', '50', '52', '53', '54', '56', '57', '58', '60',
+        '61', '63', '64', '65', '66', '68', '69', '70', '71', '73', '75', '76', '77', '78', '79',
+        '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94',
+        '95', '96', '97', '98', '99',
+    ];
+
+    /**
      * Return male middle name
      *
      * @example 'Иванович'
@@ -176,5 +188,68 @@ class Person extends \Faker\Provider\Person
         }
 
         return $lastName . static::randomElement(static::$lastNameSuffix);
+    }
+
+    /**
+     * Return snils of person.
+     *
+     * {@link} https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%BE#%D0%A1%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%BE%D0%B9_%D0%BD%D0%BE%D0%BC%D0%B5%D1%80_%D0%B8%D0%BD%D0%B4%D0%B8%D0%B2%D0%B8%D0%B4%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BB%D0%B8%D1%86%D0%B5%D0%B2%D0%BE%D0%B3%D0%BE_%D1%81%D1%87%D1%91%D1%82%D0%B0_(%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F)
+     *
+     * @return string Snils
+     */
+    public function snils()
+    {
+        $firstPartOfSnils = static::getRandomPart() . static::getRandomPart() . static::getRandomPart();
+        $sum = 0;
+        $k = 9;
+
+        for ($i = 0; $i < 9; $i++) {
+            $sum += (int)$firstPartOfSnils[$i] * $k;
+            $k--;
+        }
+
+        if($sum === 100 or $sum === 101)
+            $sum = 0;
+
+        if($sum > 101)
+            $sum = $sum % 101;
+
+        return $firstPartOfSnils . substr($sum, -2);
+    }
+
+    /**
+     * Return passport series of person.
+     *
+     * @example '9216'
+     *
+     * @return string Passport series
+     */
+    public function passportSeries()
+    {
+        $yearOfIssue = substr(rand(1997, (int)date("Y")), -2);
+
+        return static::randomElement(static::$okato) . $yearOfIssue;
+    }
+
+    /**
+     * Return passport number of person.
+     *
+     * @example '090166'
+     *
+     * @return string
+     */
+    public function passportNumber()
+    {
+        return str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Get part of snils number (3 numbers)
+     *
+     * @return string
+     */
+    private static function getRandomPart()
+    {
+        return str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
     }
 }

@@ -29,4 +29,50 @@ final class PersonTest extends TestCase
     {
         yield new Person($this->faker);
     }
+
+    public function testSnils()
+    {
+        $number = $this->faker->snils();
+        $isSnils = true;
+        $pattern = "|^\d{11}$|";
+
+        if(!preg_match($pattern, $number))
+            $isSnils = false;
+
+        $control = substr($number, -2);
+        $number = substr($number, 0, 9);
+
+        if($number < "001001998")
+            $isSnils = false;
+
+        if($isSnils)
+        {
+            $result = 0;
+            $total = strlen($number);
+
+            for($i = 0; $i < $total; $i++)
+                $result += ($total - $i) * $number[$i];
+
+            if($result == 100 || $result == 101)
+                $result = "00";
+
+            if($result > 101)
+                $result %= 101;
+
+            if($result != $control)
+                $isSnils = false;
+        }
+
+        self::assertEquals(true, $isSnils);
+    }
+
+    public function testPassportSeries()
+    {
+        self::assertNotNull($this->faker->passportSeries());
+    }
+
+    public function testPassportNumber()
+    {
+        self::assertNotNull($this->faker->passportNumber());
+    }
 }
